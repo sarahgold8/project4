@@ -5,7 +5,7 @@ const router = express.Router();
 const errorHandler = require("../helpers/error-handler");
 const Order = require("../models/order-model");
 const ShoppingCart = require("../models/cart_item_order");
-// const ShoppingCartItem = require("../models/shopping-cart-item-model");
+const ShoppingCartItem = require("../models/cart_item_order");
 const verifiedLoggedIn = require("../middleware/verify-logged-in");
 const { request, response } = require("express");
 
@@ -54,7 +54,7 @@ router.post("/searchFilteredProduct/:text", async(request, response) => {
 });
 
 
-router.get("/getCart", verifiedLoggedIn, async(request, response) => {
+router.get("/getCart", async(request, response) => {
     try {
         const user_Id = response.locals.user._id;
         const cart = await userLogic.getCart(user_Id);
@@ -137,9 +137,10 @@ router.post("/addItemToCart/:cart_id/:product_id", async(request, response) => {
 })
 
 
-router.post("/createCart", verifiedLoggedIn, async(request, response) => {
+router.post("/createCart", async(request, response) => {
+    // , verifiedLoggedIn
     try {
-        const newCart = new ShoppingCart()
+        const newCart = new ShoppingCart();
         newCart.payedAndCompleted = false;
         newCart.creationDate = new Date();
         newCart.userId = response.locals.user._id;

@@ -1,4 +1,4 @@
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const hash = require("../helpers/hashing")
 
 function verifiedLoggedIn(request, response, next) {
@@ -12,7 +12,7 @@ function verifiedLoggedIn(request, response, next) {
     if (!stringlessToken) {
         response.status(401).send("You are not logged in")
     }
-    jwt.verify(stringlessToken, config.jwt.secretKey, (err, payload) => {
+    jwt.verify(stringlessToken, config.jwt.jwtKey, (err, payload) => {
         if (err) {
             if (err.message === 'jwt expired') {
                 response.status(403).send("Your Logging session has expired")
@@ -24,7 +24,7 @@ function verifiedLoggedIn(request, response, next) {
         if (!payload.user.isAdmin === hash("isAdmin")) {
             response.status(401).send("You are not logged in")
         }
-        response.locals = payload
+        response.locals = payload;
         next();
     })
 

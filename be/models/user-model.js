@@ -6,6 +6,7 @@ const UserSchema = mongoose.Schema({
     username: {
         type: String,
         required: true,
+        unique: true,
         trim: true,
         min: 2,
         max: 15
@@ -43,7 +44,7 @@ const UserSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        default: "User",
+        default: "user",
     },
     // role: {
     //     type: String,
@@ -54,34 +55,34 @@ const UserSchema = mongoose.Schema({
 },  { versionKey: false, toJSON: { virtuals: true } });
 
 
-UserSchema.methods.comparePasswords = function (enteredPassword, callback) {
-    let hashedPassword = this.password;
-    bcrypt.compare(enteredPassword, hashedPassword, function (err, match) {
-        callback(err, match);
-    })
-};
+// UserSchema.methods.comparePasswords = function (enteredPassword, callback) {
+//     let hashedPassword = this.password;
+//     bcrypt.compare(enteredPassword, hashedPassword, function (err, match) {
+//         callback(err, match);
+//     })
+// };
 
-UserSchema.pre('save', function (next) {
-    let user = this;
+// UserSchema.pre('save', function (next) {
+//     let user = this;
 
-    if (!user.isModified('password')) {
-        return next();
-    }
+//     if (!user.isModified('password')) {
+//         return next();
+//     }
 
-    bcrypt.genSalt(10, function (err, salt) {
-        if (err) {
-            return next(err);
-        }
+//     bcrypt.genSalt(10, function (err, salt) {
+//         if (err) {
+//             return next(err);
+//         }
 
-        bcrypt.hash(user.password, salt, null, function (err, hash) {
-            if (err) {
-                return next(err);
-            }
-            user.password = hash;
-            user.salt = salt;
-            next();
-        });
-    });
-});
+//         bcrypt.hash(user.password, salt, null, function (err, hash) {
+//             if (err) {
+//                 return next(err);
+//             }
+//             user.password = hash;
+//             user.salt = salt;
+//             next();
+//         });
+//     });
+// });
 
 module.exports = mongoose.model("UserModel", UserSchema, "users");

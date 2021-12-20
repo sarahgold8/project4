@@ -71,13 +71,13 @@ async function searchFilteredProduct(text, categoryArray) {
 }
 
 // Get all categories
-function getAllCategories() {
+async function getAllCategories() {
 
     // Get all categories without virtual fields: 
     // return CategoryModel.find().exec();
 
     // Get all categories with virtual fields: 
-    return CategoryModel.find().populate("products").exec();
+    return await CategoryModel.find().populate("products").exec();
 }
 
 async function getProductsByCategory(category_name) {
